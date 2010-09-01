@@ -1,0 +1,26 @@
+body {
+    font-family: sans-serif;
+    background-color: gray;
+}
+
+h1 {
+    text-align: center;
+}
+
+#game-area {
+    border: 1px solid black;
+    display: block;
+    margin: 0 auto;
+}
+
+#next-element-container {
+    position: absolute;
+    margin: 0 auto;
+    top: 20px;
+    right: 20px;
+}
+#next-element {
+    border: 1px solid black;
+    display: block;
+    margin: 0 auto;
+}
