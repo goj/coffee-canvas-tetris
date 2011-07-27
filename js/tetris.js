@@ -208,7 +208,7 @@
             }
             return _results;
           })()) && !collides(game.piece, game.x - 1, game.y)) {
-            return --game.x;
+            --game.x;
           }
           break;
         case 39:
@@ -222,34 +222,35 @@
             }
             return _results;
           })()) && !collides(game.piece, game.x + 1, game.y)) {
-            return ++game.x;
+            ++game.x;
           }
           break;
         case 40:
           if (!collides(game.piece, game.x, game.y - 1)) {
-            return --game.y;
+            --game.y;
           }
           break;
         case 13:
           new_piece = turn_right(game.piece);
           if (in_board(new_piece, game.x, game.y) && !collides(new_piece, game.x, game.y)) {
-            return game.piece = new_piece;
+            game.piece = new_piece;
           }
           break;
         case 38:
         case 32:
           new_piece = turn_left(game.piece);
           if (in_board(new_piece, game.x, game.y) && !collides(new_piece, game.x, game.y)) {
-            return game.piece = new_piece;
+            game.piece = new_piece;
           }
           break;
         default:
-          return console.debug(event);
+          console.debug(event);
       }
+      return draw_everything();
     };
     add_new_piece();
     draw_everything();
-    gti = setInterval(game_tick, 200);
+    gti = setInterval(game_tick, 500);
     return true;
   };
 }).call(this);

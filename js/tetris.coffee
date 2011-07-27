@@ -118,9 +118,10 @@ document.onready = (event) ->
             when 38, 32 then new_piece = turn_left(game.piece); game.piece = new_piece if in_board(new_piece, game.x, game.y) and not collides(new_piece, game.x, game.y)
             else
                 console.debug event
+        draw_everything()
 
     add_new_piece()
     draw_everything()
-    gti = setInterval(game_tick, 200)
+    gti = setInterval(game_tick, 500)
 
     true
