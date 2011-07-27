@@ -12,6 +12,7 @@ one_of = (collection...) ->
 
 document.onready = (event) ->
     canvas = document.getElementById('game-area')
+    canvas.click #add focus
     ctx = canvas?.getContext('2d')
     return alert 'your browser sucks, please die' if not ctx
 
@@ -19,12 +20,11 @@ document.onready = (event) ->
     next_ctx = next_element.getContext('2d')
 
     L_PIECE = [[0, -1], [0, 0], [0, 1], [1, 1]]
-    X_PIECE = [[-1, 0], [0, 0], [1, 0], [0, -1], [0, 1]]
     I_PIECE = [[0, -2], [0, -1], [0, 0], [0, 1], [0, 2]]
     O_PIECE = [[-1, 0], [0, 0], [0, -1], [-1, -1]]
     S_PIECE = [[-1, 0], [0, 0], [0, 1], [1, 1]]
 
-    BSZ = 10 # block size
+    BSZ = 20 # block size
     WIDTH = canvas.width / BSZ
     HEIGHT = canvas.height / BSZ
     draw_block = (x, y) ->
@@ -61,7 +61,7 @@ document.onready = (event) ->
         game.x = WIDTH / 2
         game.y = HEIGHT - 3
         game.piece = game.next_piece
-        game.next_piece = one_of(L_PIECE, mirror(L_PIECE), I_PIECE, X_PIECE, O_PIECE, S_PIECE, mirror(S_PIECE))
+        game.next_piece = one_of(L_PIECE, mirror(L_PIECE), I_PIECE, O_PIECE, S_PIECE, mirror(S_PIECE))
         game.color = game.next_color
         game.next_color = one_of("red", "green", "blue", "black", "orange", "yellow")
         if game.piece then draw_next() else add_new_piece()

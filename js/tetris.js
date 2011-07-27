@@ -27,8 +27,9 @@
     return collection[Math.floor(Math.random() * collection.length)];
   };
   document.onready = function(event) {
-    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, WIDTH, X_PIECE, add_new_piece, canvas, collides, ctx, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_tick, gti, in_board, mirror, next_ctx, next_element, score_span, title_bar, turn_left, turn_right, _;
+    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_tick, gti, in_board, mirror, next_ctx, next_element, score_span, title_bar, turn_left, turn_right, _;
     canvas = document.getElementById('game-area');
+    canvas.click;
     ctx = canvas != null ? canvas.getContext('2d') : void 0;
     if (!ctx) {
       return alert('your browser sucks, please die');
@@ -36,11 +37,10 @@
     next_element = document.getElementById('next-element');
     next_ctx = next_element.getContext('2d');
     L_PIECE = [[0, -1], [0, 0], [0, 1], [1, 1]];
-    X_PIECE = [[-1, 0], [0, 0], [1, 0], [0, -1], [0, 1]];
     I_PIECE = [[0, -2], [0, -1], [0, 0], [0, 1], [0, 2]];
     O_PIECE = [[-1, 0], [0, 0], [0, -1], [-1, -1]];
     S_PIECE = [[-1, 0], [0, 0], [0, 1], [1, 1]];
-    BSZ = 10;
+    BSZ = 20;
     WIDTH = canvas.width / BSZ;
     HEIGHT = canvas.height / BSZ;
     draw_block = function(x, y) {
@@ -134,7 +134,7 @@
       game.x = WIDTH / 2;
       game.y = HEIGHT - 3;
       game.piece = game.next_piece;
-      game.next_piece = one_of(L_PIECE, mirror(L_PIECE), I_PIECE, X_PIECE, O_PIECE, S_PIECE, mirror(S_PIECE));
+      game.next_piece = one_of(L_PIECE, mirror(L_PIECE), I_PIECE, O_PIECE, S_PIECE, mirror(S_PIECE));
       game.color = game.next_color;
       game.next_color = one_of("red", "green", "blue", "black", "orange", "yellow");
       if (game.piece) {
