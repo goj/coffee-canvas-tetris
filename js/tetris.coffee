@@ -20,7 +20,7 @@ document.onready = (event) ->
     next_ctx = next_element.getContext('2d')
 
     L_PIECE = [[0, -1], [0, 0], [0, 1], [1, 1]]
-    I_PIECE = [[0, -2], [0, -1], [0, 0], [0, 1], [0, 2]]
+    I_PIECE = [[0, -1], [0, 0], [0, 1], [0, 2]]
     O_PIECE = [[-1, 0], [0, 0], [0, -1], [-1, -1]]
     S_PIECE = [[-1, 0], [0, 0], [0, 1], [1, 1]]
 
