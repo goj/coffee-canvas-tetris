@@ -32,7 +32,7 @@
     canvas.click;
     ctx = canvas != null ? canvas.getContext('2d') : void 0;
     if (!ctx) {
-      return alert('your browser sucks, please die');
+      return alert('Your browser is too old to play this game');
     }
     next_element = document.getElementById('next-element');
     next_ctx = next_element.getContext('2d');
@@ -236,6 +236,7 @@
             return game.piece = new_piece;
           }
           break;
+        case 38:
         case 32:
           new_piece = turn_left(game.piece);
           if (in_board(new_piece, game.x, game.y) && !collides(new_piece, game.x, game.y)) {
@@ -248,7 +249,7 @@
     };
     add_new_piece();
     draw_everything();
-    gti = setInterval(game_tick, 100);
+    gti = setInterval(game_tick, 200);
     return true;
   };
 }).call(this);

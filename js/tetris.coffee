@@ -14,7 +14,7 @@ document.onready = (event) ->
     canvas = document.getElementById('game-area')
     canvas.click #add focus
     ctx = canvas?.getContext('2d')
-    return alert 'your browser sucks, please die' if not ctx
+    return alert 'Your browser is too old to play this game' if not ctx
 
     next_element = document.getElementById('next-element')
     next_ctx = next_element.getContext('2d')
@@ -102,16 +102,25 @@ document.onready = (event) ->
 
     document.onkeydown = (event) ->
         switch event?.keyCode
-            when 37  then --game.x if all(game.x + dx > 0 for [dx, _] in game.piece) and not collides(game.piece, game.x - 1, game.y)
+            # left arrow
+            when 37 then --game.x if all(game.x + dx > 0 for [dx, _] in game.piece) and not collides(game.piece, game.x - 1, game.y)
+
+            # right arrow
             when 39 then ++game.x if all(game.x + dx < WIDTH - 1 for [dx, _] in game.piece) and not collides(game.piece, game.x + 1, game.y)
-            when 40 then --game.y unless collides(game.piece, game.x, game.y - 1)
+
+            # down arrow
+            when 40 then --game.y unless collides(game.piece, game.x, game.y - 1) 
+
+            # enter key
             when 13 then new_piece = turn_right(game.piece); game.piece = new_piece if in_board(new_piece, game.x, game.y) and not collides(new_piece, game.x, game.y)
-            when 32 then new_piece = turn_left(game.piece); game.piece = new_piece if in_board(new_piece, game.x, game.y) and not collides(new_piece, game.x, game.y)
+            
+            # up arrow or spacebar
+            when 38, 32 then new_piece = turn_left(game.piece); game.piece = new_piece if in_board(new_piece, game.x, game.y) and not collides(new_piece, game.x, game.y)
             else
                 console.debug event
 
     add_new_piece()
     draw_everything()
-    gti = setInterval(game_tick, 100)
+    gti = setInterval(game_tick, 200)
 
     true
