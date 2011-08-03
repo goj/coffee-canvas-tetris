@@ -27,7 +27,7 @@
     return collection[Math.floor(Math.random() * collection.length)];
   };
   document.onready = function(event) {
-    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_text, game_tick, gti, in_board, mirror, next_ctx, next_element, pause_or_unpause, restart, score_span, start, stop, text_color, title_bar, turn_left, turn_right, _;
+    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, T_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_text, game_tick, gti, in_board, mirror, next_ctx, next_element, pause_or_unpause, restart, score_span, start, stop, text_color, title_bar, turn_left, turn_right, _;
     canvas = document.getElementById('game-area');
     ctx = canvas != null ? canvas.getContext('2d') : void 0;
     if (!ctx) {
@@ -44,6 +44,7 @@
     I_PIECE = [[0, -1], [0, 0], [0, 1], [0, 2]];
     O_PIECE = [[-1, 0], [0, 0], [0, -1], [-1, -1]];
     S_PIECE = [[-1, 0], [0, 0], [0, 1], [1, 1]];
+	T_PIECE = [[-1, 0], [0, 0], [0, 1], [1, 0]];
     BSZ = 20;
     WIDTH = canvas.width / BSZ;
     HEIGHT = canvas.height / BSZ;
@@ -138,7 +139,7 @@
       game.x = WIDTH / 2;
       game.y = HEIGHT - 3;
       game.piece = game.next_piece;
-      game.next_piece = one_of(L_PIECE, mirror(L_PIECE), I_PIECE, O_PIECE, S_PIECE, mirror(S_PIECE));
+      game.next_piece = one_of(L_PIECE, mirror(L_PIECE), I_PIECE, O_PIECE, S_PIECE, mirror(S_PIECE), T_PIECE);
       game.color = game.next_color;
       game.next_color = one_of("red", "green", "blue", "black", "orange", "yellow");
       if (game.piece) {

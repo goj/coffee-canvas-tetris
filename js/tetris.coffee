@@ -29,6 +29,7 @@ document.onready = (event) ->
     I_PIECE = [[0, -1], [0, 0], [0, 1], [0, 2]]
     O_PIECE = [[-1, 0], [0, 0], [0, -1], [-1, -1]]
     S_PIECE = [[-1, 0], [0, 0], [0, 1], [1, 1]]
+	T_PIECE = [[-1, 0], [0, 0], [0, 1], [1, 0]]
 
     BSZ = 20 # block size
     WIDTH = canvas.width / BSZ
@@ -67,7 +68,7 @@ document.onready = (event) ->
         game.x = WIDTH / 2
         game.y = HEIGHT - 3
         game.piece = game.next_piece
-        game.next_piece = one_of(L_PIECE, mirror(L_PIECE), I_PIECE, O_PIECE, S_PIECE, mirror(S_PIECE))
+        game.next_piece = one_of(L_PIECE, mirror(L_PIECE), I_PIECE, O_PIECE, S_PIECE, mirror(S_PIECE), T_PIECE)
         game.color = game.next_color
         game.next_color = one_of("red", "green", "blue", "black", "orange", "yellow")
         if game.piece then draw_next() else add_new_piece()
