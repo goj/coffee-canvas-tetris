@@ -150,7 +150,6 @@ document.onready = (event) ->
         draw_everything()
 
     # start and stop event bindings
-    $(".start_or_stop").click -> start_or_stop()
     $(canvas).click -> start_or_stop()
 
     # start the game

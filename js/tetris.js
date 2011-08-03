@@ -273,9 +273,6 @@
       }
       return draw_everything();
     };
-    $(".start_or_stop").click(function() {
-      return start_or_stop();
-    });
     $(canvas).click(function() {
       return start_or_stop();
     });
