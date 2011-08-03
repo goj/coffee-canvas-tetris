@@ -100,8 +100,14 @@ document.onready = (event) ->
         else
             --game.y
 
-    game_lost = ->
+    start = ->
+        gti = setInterval(game_tick, 500)
+
+    stop = ->
         clearInterval(gti)
+
+    game_lost = ->
+        stop()
         title_bar.innerHTML = "you earned " + score_span.innerHTML + " points, loser!"
 
     document.onkeydown = (event) ->
@@ -126,6 +132,6 @@ document.onready = (event) ->
 
     add_new_piece()
     draw_everything()
-    gti = setInterval(game_tick, 500)
+    start()
 
     true
