@@ -19,7 +19,8 @@ document.onready = (event) ->
     next_element = document.getElementById('next-element')
     next_ctx = next_element.getContext('2d')
 
-    # for "Paused" text
+    # for in game text
+    game_text = null
     ctx.textAlign = "center"
     ctx.font = "20pt Courier New"
     text_color = "black"
@@ -105,7 +106,6 @@ document.onready = (event) ->
         else
             --game.y
 
-    pause_text = null
     start = ->
         if(gti == null)
             gti = setInterval(game_tick, 500)
@@ -120,18 +120,26 @@ document.onready = (event) ->
 
     pause_or_unpause = ->
         if gti == null
-            pause_text = ctx.fillText("", 100, 100);
+            game_text = ctx.fillText("", 100, 100);
             start()
         else
             ctx.fillStyle = text_color
-            pause_text = ctx.fillText("PAUSED", 100, 100);
+            game_text = ctx.fillText("PAUSED", 100, 100);
             stop()
 
     game_lost = ->
         ctx.fillStyle = text_color
-        pause_text = ctx.fillText("GAME OVER", 100, 100);
+        game_text = ctx.fillText("GAME OVER", 100, 100);
         stop()
-        title_bar.innerHTML = "you earned " + score_span.innerHTML + " points, loser!"
+        $(canvas).click -> restart()
+
+    restart = ->
+        score_span.innerHTML = 0
+        game =
+            board: [] for _ in [0..HEIGHT]
+        add_new_piece()
+        draw_everything()
+        start()
 
     document.onkeydown = (event) ->
         # don't allow movement when game is not ticking
@@ -161,8 +169,6 @@ document.onready = (event) ->
     $(canvas).click -> pause_or_unpause()
 
     # start the game
-    add_new_piece()
-    draw_everything()
-    start()
+    restart()
 
     true

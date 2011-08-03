@@ -27,7 +27,7 @@
     return collection[Math.floor(Math.random() * collection.length)];
   };
   document.onready = function(event) {
-    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_tick, gti, in_board, mirror, next_ctx, next_element, pause_or_unpause, pause_text, score_span, start, stop, text_color, title_bar, turn_left, turn_right, _;
+    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_text, game_tick, gti, in_board, mirror, next_ctx, next_element, pause_or_unpause, restart, score_span, start, stop, text_color, title_bar, turn_left, turn_right, _;
     canvas = document.getElementById('game-area');
     ctx = canvas != null ? canvas.getContext('2d') : void 0;
     if (!ctx) {
@@ -36,6 +36,7 @@
     gti = null;
     next_element = document.getElementById('next-element');
     next_ctx = next_element.getContext('2d');
+    game_text = null;
     ctx.textAlign = "center";
     ctx.font = "20pt Courier New";
     text_color = "black";
@@ -193,7 +194,6 @@
         return --game.y;
       }
     };
-    pause_text = null;
     start = function() {
       if (gti === null) {
         gti = setInterval(game_tick, 500);
@@ -209,19 +209,38 @@
     };
     pause_or_unpause = function() {
       if (gti === null) {
-        pause_text = ctx.fillText("", 100, 100);
+        game_text = ctx.fillText("", 100, 100);
         return start();
       } else {
         ctx.fillStyle = text_color;
-        pause_text = ctx.fillText("PAUSED", 100, 100);
+        game_text = ctx.fillText("PAUSED", 100, 100);
         return stop();
       }
     };
     game_lost = function() {
       ctx.fillStyle = text_color;
-      pause_text = ctx.fillText("GAME OVER", 100, 100);
+      game_text = ctx.fillText("GAME OVER", 100, 100);
       stop();
-      return title_bar.innerHTML = "you earned " + score_span.innerHTML + " points, loser!";
+      return $(canvas).click(function() {
+        return restart();
+      });
+    };
+    restart = function() {
+      var _;
+      score_span.innerHTML = 0;
+      game = {
+        board: (function() {
+          var _results;
+          _results = [];
+          for (_ = 0; 0 <= HEIGHT ? _ <= HEIGHT : _ >= HEIGHT; 0 <= HEIGHT ? _++ : _--) {
+            _results.push([]);
+          }
+          return _results;
+        })()
+      };
+      add_new_piece();
+      draw_everything();
+      return start();
     };
     document.onkeydown = function(event) {
       var dx, new_piece;
@@ -283,9 +302,7 @@
     $(canvas).click(function() {
       return pause_or_unpause();
     });
-    add_new_piece();
-    draw_everything();
-    start();
+    restart();
     return true;
   };
 }).call(this);
