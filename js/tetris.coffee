@@ -109,27 +109,35 @@ document.onready = (event) ->
     start = ->
         if(gti == null)
             gti = setInterval(game_tick, 500)
-        pause_text = ctx.fillText("", 100, 100);
-        true
+            true
+        else
+            false
 
     stop = ->
         clearInterval(gti)
         gti = null
-        ctx.fillStyle = text_color
-        pause_text = ctx.fillText("PAUSED", 100, 100);
         true
 
-    start_or_stop = ->
-        if(gti == null)
+    pause_or_unpause = ->
+        if gti == null
+            pause_text = ctx.fillText("", 100, 100);
             start()
         else
+            ctx.fillStyle = text_color
+            pause_text = ctx.fillText("PAUSED", 100, 100);
             stop()
 
     game_lost = ->
+        ctx.fillStyle = text_color
+        pause_text = ctx.fillText("GAME OVER", 100, 100);
         stop()
         title_bar.innerHTML = "you earned " + score_span.innerHTML + " points, loser!"
 
     document.onkeydown = (event) ->
+        # don't allow movement when game is not ticking
+        if gti == null
+            return false
+
         switch event?.keyCode
             # left arrow
             when 37 then --game.x if all(game.x + dx > 0 for [dx, _] in game.piece) and not collides(game.piece, game.x - 1, game.y)
@@ -150,7 +158,7 @@ document.onready = (event) ->
         draw_everything()
 
     # start and stop event bindings
-    $(canvas).click -> start_or_stop()
+    $(canvas).click -> pause_or_unpause()
 
     # start the game
     add_new_piece()
