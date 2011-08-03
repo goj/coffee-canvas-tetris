@@ -27,7 +27,7 @@
     return collection[Math.floor(Math.random() * collection.length)];
   };
   document.onready = function(event) {
-    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_tick, in_board, mirror, next_ctx, next_element, score_span, start, stop, title_bar, turn_left, turn_right, _;
+    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_tick, gti, in_board, mirror, next_ctx, next_element, score_span, start, stop, title_bar, turn_left, turn_right, _;
     canvas = document.getElementById('game-area');
     canvas.click;
     ctx = canvas != null ? canvas.getContext('2d') : void 0;
@@ -190,9 +190,10 @@
         return --game.y;
       }
     };
+    gti = 1;
     start = function() {
-      var gti;
-      return gti = setInterval(game_tick, 500);
+      gti = setInterval(game_tick, 500);
+      return true;
     };
     stop = function() {
       return clearInterval(gti);

@@ -100,8 +100,10 @@ document.onready = (event) ->
         else
             --game.y
 
+    gti = 1
     start = ->
         gti = setInterval(game_tick, 500)
+        true
 
     stop = ->
         clearInterval(gti)
