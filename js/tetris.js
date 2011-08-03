@@ -179,10 +179,10 @@
             ++score_span.innerHTML;
           }
         }
+        add_new_piece();
         if (needs_redraw) {
           draw_everything();
         }
-        add_new_piece();
         if (collides(game.piece, game.x, game.y)) {
           return game_lost();
         }
@@ -192,7 +192,7 @@
     };
     game_lost = function() {
       clearInterval(gti);
-      return title_bar.innerHTML = "you earned " + score_span.innerHTML + " points, looser!";
+      return title_bar.innerHTML = "you earned " + score_span.innerHTML + " points, loser!";
     };
     document.onkeydown = function(event) {
       var dx, new_piece;

@@ -80,6 +80,7 @@ document.onready = (event) ->
         if collides(game.piece, game.x, game.y - 1)
             for [dx, dy] in game.piece when 0 <= game.y + dy < HEIGHT
                     game.board[game.y+dy][game.x+dx] = game.color
+
             needs_redraw = false
             for y in [0...HEIGHT]
                 ry = HEIGHT - y - 1
@@ -88,9 +89,12 @@ document.onready = (event) ->
                     game.board[ry..ry] = []
                     game.board.push []
                     ++score_span.innerHTML
+
+            add_new_piece()
+
             if needs_redraw
                 draw_everything()
-            add_new_piece()
+            
             if collides(game.piece, game.x, game.y)
                 game_lost()
         else
@@ -98,7 +102,7 @@ document.onready = (event) ->
 
     game_lost = ->
         clearInterval(gti)
-        title_bar.innerHTML = "you earned " + score_span.innerHTML + " points, looser!"
+        title_bar.innerHTML = "you earned " + score_span.innerHTML + " points, loser!"
 
     document.onkeydown = (event) ->
         switch event?.keyCode
