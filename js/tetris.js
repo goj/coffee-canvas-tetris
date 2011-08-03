@@ -27,15 +27,18 @@
     return collection[Math.floor(Math.random() * collection.length)];
   };
   document.onready = function(event) {
-    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_tick, gti, in_board, mirror, next_ctx, next_element, score_span, start, stop, title_bar, turn_left, turn_right, _;
+    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_tick, gti, in_board, mirror, next_ctx, next_element, pause_text, score_span, start, start_or_stop, stop, text_color, title_bar, turn_left, turn_right, _;
     canvas = document.getElementById('game-area');
-    canvas.click;
     ctx = canvas != null ? canvas.getContext('2d') : void 0;
     if (!ctx) {
       return alert('Your browser is too old to play this game');
     }
+    gti = null;
     next_element = document.getElementById('next-element');
     next_ctx = next_element.getContext('2d');
+    ctx.textAlign = "center";
+    ctx.font = "20pt Courier New";
+    text_color = "black";
     L_PIECE = [[0, -1], [0, 0], [0, 1], [1, 1]];
     I_PIECE = [[0, -1], [0, 0], [0, 1], [0, 2]];
     O_PIECE = [[-1, 0], [0, 0], [0, -1], [-1, -1]];
@@ -190,13 +193,27 @@
         return --game.y;
       }
     };
-    gti = 1;
+    pause_text = null;
     start = function() {
-      gti = setInterval(game_tick, 500);
+      if (gti === null) {
+        gti = setInterval(game_tick, 500);
+      }
+      pause_text = ctx.fillText("", 100, 100);
       return true;
     };
     stop = function() {
-      return clearInterval(gti);
+      clearInterval(gti);
+      gti = null;
+      ctx.fillStyle = text_color;
+      pause_text = ctx.fillText("PAUSED", 100, 100);
+      return true;
+    };
+    start_or_stop = function() {
+      if (gti === null) {
+        return start();
+      } else {
+        return stop();
+      }
     };
     game_lost = function() {
       stop();
@@ -256,6 +273,12 @@
       }
       return draw_everything();
     };
+    $(".start_or_stop").click(function() {
+      return start_or_stop();
+    });
+    $(canvas).click(function() {
+      return start_or_stop();
+    });
     add_new_piece();
     draw_everything();
     start();

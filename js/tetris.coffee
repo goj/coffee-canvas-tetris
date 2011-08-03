@@ -12,12 +12,17 @@ one_of = (collection...) ->
 
 document.onready = (event) ->
     canvas = document.getElementById('game-area')
-    canvas.click #add focus
     ctx = canvas?.getContext('2d')
     return alert 'Your browser is too old to play this game' if not ctx
+    gti = null # gti tracks the "Game Tick Interval"
 
     next_element = document.getElementById('next-element')
     next_ctx = next_element.getContext('2d')
+
+    # for "Paused" text
+    ctx.textAlign = "center"
+    ctx.font = "20pt Courier New"
+    text_color = "black"
 
     L_PIECE = [[0, -1], [0, 0], [0, 1], [1, 1]]
     I_PIECE = [[0, -1], [0, 0], [0, 1], [0, 2]]
@@ -100,13 +105,25 @@ document.onready = (event) ->
         else
             --game.y
 
-    gti = 1
+    pause_text = null
     start = ->
-        gti = setInterval(game_tick, 500)
+        if(gti == null)
+            gti = setInterval(game_tick, 500)
+        pause_text = ctx.fillText("", 100, 100);
         true
 
     stop = ->
         clearInterval(gti)
+        gti = null
+        ctx.fillStyle = text_color
+        pause_text = ctx.fillText("PAUSED", 100, 100);
+        true
+
+    start_or_stop = ->
+        if(gti == null)
+            start()
+        else
+            stop()
 
     game_lost = ->
         stop()
@@ -132,6 +149,11 @@ document.onready = (event) ->
                 console.debug event
         draw_everything()
 
+    # start and stop event bindings
+    $(".start_or_stop").click -> start_or_stop()
+    $(canvas).click -> start_or_stop()
+
+    # start the game
     add_new_piece()
     draw_everything()
     start()
