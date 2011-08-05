@@ -19,6 +19,8 @@ document.onready = (event) ->
     next_element = document.getElementById('next-element')
     next_ctx = next_element.getContext('2d')
 
+    down_wasnt_pushed = true
+
     # for in game text
     game_text = null
     ctx.textAlign = "center"
@@ -83,7 +85,6 @@ document.onready = (event) ->
     score_span = document.getElementById('score')
 
     game_tick = ->
-        draw_everything()
         if collides(game.piece, game.x, game.y - 1)
             for [dx, dy] in game.piece when 0 <= game.y + dy < HEIGHT
                     game.board[game.y+dy][game.x+dx] = game.color
@@ -104,8 +105,11 @@ document.onready = (event) ->
             
             if collides(game.piece, game.x, game.y)
                 game_lost()
-        else
+        else if down_wasnt_pushed
             --game.y
+            draw_everything()
+        else
+            down_wasnt_pushed = true
 
     start = ->
         if(gti == null)
@@ -132,7 +136,7 @@ document.onready = (event) ->
         ctx.fillStyle = text_color
         game_text = ctx.fillText("GAME OVER", 100, 100);
         stop()
-        $(canvas).click -> restart()
+        $(canvas).one "click", -> restart()
 
     restart = ->
         score_span.innerHTML = 0
@@ -155,7 +159,9 @@ document.onready = (event) ->
             when 39 then ++game.x if all(game.x + dx < WIDTH - 1 for [dx, _] in game.piece) and not collides(game.piece, game.x + 1, game.y)
 
             # down arrow
-            when 40 then --game.y unless collides(game.piece, game.x, game.y - 1) 
+            when 40 
+                --game.y unless collides(game.piece, game.x, game.y - 1) 
+                down_wasnt_pushed = false
 
             # enter key
             when 13 then new_piece = turn_right(game.piece); game.piece = new_piece if in_board(new_piece, game.x, game.y) and not collides(new_piece, game.x, game.y)

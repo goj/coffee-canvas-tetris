@@ -27,7 +27,7 @@
     return collection[Math.floor(Math.random() * collection.length)];
   };
   document.onready = function(event) {
-    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, T_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_text, game_tick, gti, in_board, mirror, next_ctx, next_element, pause_or_unpause, restart, score_span, start, stop, text_color, title_bar, turn_left, turn_right, _;
+    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, T_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, down_wasnt_pushed, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_text, game_tick, gti, in_board, mirror, next_ctx, next_element, pause_or_unpause, restart, score_span, start, stop, text_color, title_bar, turn_left, turn_right, _;
     canvas = document.getElementById('game-area');
     ctx = canvas != null ? canvas.getContext('2d') : void 0;
     if (!ctx) {
@@ -36,6 +36,7 @@
     gti = null;
     next_element = document.getElementById('next-element');
     next_ctx = next_element.getContext('2d');
+    down_wasnt_pushed = true;
     game_text = null;
     ctx.textAlign = "center";
     ctx.font = "20pt Courier New";
@@ -165,7 +166,6 @@
     score_span = document.getElementById('score');
     game_tick = function() {
       var dx, dy, needs_redraw, ry, y, _i, _len, _ref, _ref2, _ref3, _ref4;
-      draw_everything();
       if (collides(game.piece, game.x, game.y - 1)) {
         _ref = game.piece;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -191,8 +191,11 @@
         if (collides(game.piece, game.x, game.y)) {
           return game_lost();
         }
+      } else if (down_wasnt_pushed) {
+        --game.y;
+        return draw_everything();
       } else {
-        return --game.y;
+        return down_wasnt_pushed = true;
       }
     };
     start = function() {
@@ -222,7 +225,7 @@
       ctx.fillStyle = text_color;
       game_text = ctx.fillText("GAME OVER", 100, 100);
       stop();
-      return $(canvas).click(function() {
+      return $(canvas).one("click", function() {
         return restart();
       });
     };
@@ -281,6 +284,7 @@
           if (!collides(game.piece, game.x, game.y - 1)) {
             --game.y;
           }
+          down_wasnt_pushed = false;
           break;
         case 13:
           new_piece = turn_right(game.piece);
