@@ -24,3 +24,10 @@ h1 {
     display: block;
     margin: 0 auto;
 }
+
+#stats-bar {
+    position: absolute;
+    margin: 0 auto;
+    top: 40px;
+    right: 200px;
+}

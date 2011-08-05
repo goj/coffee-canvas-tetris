@@ -39,14 +39,17 @@
     }
   };
   document.onready = function(event) {
-    var $score_span, BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, T_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, down_wasnt_pushed, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_text, game_tick, gti, in_board, level, mirror, next_ctx, next_element, pause_or_unpause, restart, start, stop, text_color, turn_left, turn_right, _;
+    var $level_span, $lines_span, $score_span, BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, T_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, down_wasnt_pushed, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_text, game_tick, gti, in_board, level, lines_cleared, mirror, next_ctx, next_element, next_level, pause_or_unpause, restart, speed, start, stop, text_color, turn_left, turn_right, _;
     canvas = document.getElementById('game-area');
     ctx = canvas != null ? canvas.getContext('2d') : void 0;
     if (!ctx) {
       return alert('Your browser is too old to play this game');
     }
     gti = null;
+    speed = 500;
+    lines_cleared = 0;
     level = 0;
+    next_level = 5;
     next_element = document.getElementById('next-element');
     next_ctx = next_element.getContext('2d');
     down_wasnt_pushed = true;
@@ -176,6 +179,8 @@
       return _results;
     };
     $score_span = $('#score');
+    $level_span = $('#level');
+    $lines_span = $('#lines');
     game_tick = function() {
       var dx, dy, lines, needs_redraw, ry, y, _i, _len, _ref, _ref2, _ref3, _ref4;
       if (collides(game.piece, game.x, game.y - 1)) {
@@ -197,8 +202,17 @@
             lines++;
           }
         }
+        lines_cleared += lines;
+        $lines_span.text(lines_cleared);
         if (lines > 0) {
           $score_span.text(parseInt($score_span.text()) + score(level, lines));
+        }
+        if (lines_cleared >= next_level) {
+          level++;
+          $level_span.text(level);
+          next_level += 5;
+          stop();
+          start(speed - (speed / 5));
         }
         add_new_piece();
         if (needs_redraw) {
@@ -214,9 +228,12 @@
         return down_wasnt_pushed = true;
       }
     };
-    start = function() {
+    start = function(speed) {
+      if (speed == null) {
+        speed = 500;
+      }
       if (gti === null) {
-        gti = setInterval(game_tick, 500);
+        gti = setInterval(game_tick, speed);
         return true;
       } else {
         return false;
@@ -248,6 +265,11 @@
     restart = function() {
       var _;
       $score_span.text(0);
+      $lines_span.text(0);
+      $level_span.text(0);
+      lines_cleared = 0;
+      level = 0;
+      next_level = 5;
       game = {
         board: (function() {
           var _results;

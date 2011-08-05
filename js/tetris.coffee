@@ -24,9 +24,16 @@ document.onready = (event) ->
     ctx = canvas?.getContext('2d')
     return alert 'Your browser is too old to play this game' if not ctx
     gti = null # gti tracks the "Game Tick Interval"
+    speed = 500
 
-    level = 0 # tracks current level
+    lines_cleared = 0 # tracks lines cleared total
 
+    # tracks current level
+    level = 0
+
+    # lines needed for next level up
+    next_level = 5
+    
     next_element = document.getElementById('next-element')
     next_ctx = next_element.getContext('2d')
 
@@ -93,6 +100,8 @@ document.onready = (event) ->
         next_ctx.fillRect(BSZ * (x + 2), next_element.height - BSZ * (y + 4), BSZ, BSZ) for [x, y] in game.next_piece
 
     $score_span = $('#score')
+    $level_span = $('#level')
+    $lines_span = $('#lines')
 
     game_tick = ->
         if collides(game.piece, game.x, game.y - 1)
@@ -108,9 +117,19 @@ document.onready = (event) ->
                     game.board[ry..ry] = []
                     game.board.push []
                     lines++
+            lines_cleared += lines
+            $lines_span.text(lines_cleared)
 
             # increment score if lines were made
             $score_span.text(parseInt($score_span.text()) + score(level, lines)) if lines > 0
+
+            if lines_cleared >= next_level
+                level++
+                $level_span.text(level)
+                next_level += 5
+                stop()
+                start(speed - (speed/5))
+                
 
             add_new_piece()
 
@@ -125,9 +144,9 @@ document.onready = (event) ->
         else
             down_wasnt_pushed = true
 
-    start = ->
+    start = (speed = 500)->
         if(gti == null)
-            gti = setInterval(game_tick, 500)
+            gti = setInterval(game_tick, speed)
             true
         else
             false
@@ -154,6 +173,11 @@ document.onready = (event) ->
 
     restart = ->
         $score_span.text(0)
+        $lines_span.text(0)
+        $level_span.text(0)
+        lines_cleared = 0
+        level = 0
+        next_level = 5
         game =
             board: [] for _ in [0..HEIGHT]
         add_new_piece()
