@@ -10,11 +10,22 @@ all = (collection) ->
 one_of = (collection...) ->
     collection[Math.floor(Math.random() * collection.length)]
 
+# calculates score based on lines and level
+score = (level, lines) ->
+    # from http://tetris.wikia.com/wiki/Scoring
+    switch lines
+        when 1 then 40 * (level + 1)
+        when 2 then 100 * (level + 1)
+        when 3 then 300 * (level + 1)
+        when 4 then 1200 * (level + 1)
+
 document.onready = (event) ->
     canvas = document.getElementById('game-area')
     ctx = canvas?.getContext('2d')
     return alert 'Your browser is too old to play this game' if not ctx
     gti = null # gti tracks the "Game Tick Interval"
+
+    level = 0 # tracks current level
 
     next_element = document.getElementById('next-element')
     next_ctx = next_element.getContext('2d')
@@ -81,8 +92,7 @@ document.onready = (event) ->
         next_ctx.fillStyle = game.next_color
         next_ctx.fillRect(BSZ * (x + 2), next_element.height - BSZ * (y + 4), BSZ, BSZ) for [x, y] in game.next_piece
 
-    title_bar = document.getElementById('title-bar')
-    score_span = document.getElementById('score')
+    $score_span = $('#score')
 
     game_tick = ->
         if collides(game.piece, game.x, game.y - 1)
@@ -90,13 +100,17 @@ document.onready = (event) ->
                     game.board[game.y+dy][game.x+dx] = game.color
 
             needs_redraw = false
+            lines = 0
             for y in [0...HEIGHT]
                 ry = HEIGHT - y - 1
                 if game.board[ry].length == WIDTH and all(game.board[ry])
                     needs_redraw = true
                     game.board[ry..ry] = []
                     game.board.push []
-                    ++score_span.innerHTML
+                    lines++
+
+            # increment score if lines were made
+            $score_span.text(parseInt($score_span.text()) + score(level, lines)) if lines > 0
 
             add_new_piece()
 
@@ -139,7 +153,7 @@ document.onready = (event) ->
         $(canvas).one "click", -> restart()
 
     restart = ->
-        score_span.innerHTML = 0
+        $score_span.text(0)
         game =
             board: [] for _ in [0..HEIGHT]
         add_new_piece()

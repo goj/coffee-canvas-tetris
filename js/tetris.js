@@ -1,5 +1,5 @@
 (function() {
-  var all, any, one_of;
+  var all, any, one_of, score;
   var __slice = Array.prototype.slice;
   any = function(collection) {
     var elem, _i, _len;
@@ -26,14 +26,27 @@
     collection = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
     return collection[Math.floor(Math.random() * collection.length)];
   };
+  score = function(level, lines) {
+    switch (lines) {
+      case 1:
+        return 40 * (level + 1);
+      case 2:
+        return 100 * (level + 1);
+      case 3:
+        return 300 * (level + 1);
+      case 4:
+        return 1200 * (level + 1);
+    }
+  };
   document.onready = function(event) {
-    var BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, T_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, down_wasnt_pushed, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_text, game_tick, gti, in_board, mirror, next_ctx, next_element, pause_or_unpause, restart, score_span, start, stop, text_color, title_bar, turn_left, turn_right, _;
+    var $score_span, BSZ, HEIGHT, I_PIECE, L_PIECE, O_PIECE, S_PIECE, T_PIECE, WIDTH, add_new_piece, canvas, collides, ctx, down_wasnt_pushed, draw_block, draw_everything, draw_next, draw_piece, game, game_lost, game_text, game_tick, gti, in_board, level, mirror, next_ctx, next_element, pause_or_unpause, restart, start, stop, text_color, turn_left, turn_right, _;
     canvas = document.getElementById('game-area');
     ctx = canvas != null ? canvas.getContext('2d') : void 0;
     if (!ctx) {
       return alert('Your browser is too old to play this game');
     }
     gti = null;
+    level = 0;
     next_element = document.getElementById('next-element');
     next_ctx = next_element.getContext('2d');
     down_wasnt_pushed = true;
@@ -162,10 +175,9 @@
       }
       return _results;
     };
-    title_bar = document.getElementById('title-bar');
-    score_span = document.getElementById('score');
+    $score_span = $('#score');
     game_tick = function() {
-      var dx, dy, needs_redraw, ry, y, _i, _len, _ref, _ref2, _ref3, _ref4;
+      var dx, dy, lines, needs_redraw, ry, y, _i, _len, _ref, _ref2, _ref3, _ref4;
       if (collides(game.piece, game.x, game.y - 1)) {
         _ref = game.piece;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -175,14 +187,18 @@
           }
         }
         needs_redraw = false;
+        lines = 0;
         for (y = 0; 0 <= HEIGHT ? y < HEIGHT : y > HEIGHT; 0 <= HEIGHT ? y++ : y--) {
           ry = HEIGHT - y - 1;
           if (game.board[ry].length === WIDTH && all(game.board[ry])) {
             needs_redraw = true;
             [].splice.apply(game.board, [ry, ry - ry + 1].concat(_ref4 = [])), _ref4;
             game.board.push([]);
-            ++score_span.innerHTML;
+            lines++;
           }
+        }
+        if (lines > 0) {
+          $score_span.text(parseInt($score_span.text()) + score(level, lines));
         }
         add_new_piece();
         if (needs_redraw) {
@@ -231,7 +247,7 @@
     };
     restart = function() {
       var _;
-      score_span.innerHTML = 0;
+      $score_span.text(0);
       game = {
         board: (function() {
           var _results;
