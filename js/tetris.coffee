@@ -63,10 +63,9 @@ document.onready = (event) ->
 
     mirror     = (shape) -> [-x, y] for [x, y] in shape
     turn_right = (shape) -> [y, -x] for [x, y] in shape
-    turn_left  = (shape) -> [-y, x] for [x, y] in shape
+    turn_left  =  (shape) -> [-y, x] for [x, y] in shape unless game.piece == O_PIECE
 
-    game =
-        board: [] for _ in [0..HEIGHT]
+    game =  board: [] for _ in [0..HEIGHT]
 
     collides = (shape, x, y) ->
         any(y+dy < 0 or game.board[y+dy][x+dx] for [dx, dy] in shape)
