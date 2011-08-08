@@ -95,13 +95,17 @@
       return _results;
     };
     turn_left = function(shape) {
-      var x, y, _i, _len, _ref, _results;
-      _results = [];
-      for (_i = 0, _len = shape.length; _i < _len; _i++) {
-        _ref = shape[_i], x = _ref[0], y = _ref[1];
-        _results.push([-y, x]);
-      }
+      if(game.piece != O_PIECE)
+	 {
+		var x, y, _i, _len, _ref, _results;
+		_results = [];
+		for (_i = 0, _len = shape.length; _i < _len; _i++) {
+		_ref = shape[_i], x = _ref[0], y = _ref[1];
+		_results.push([-y, x]);
+		}
+      	 
       return _results;
+	 }
     };
     game = {
       board: (function() {
